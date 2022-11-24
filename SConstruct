@@ -135,9 +135,9 @@ else:
 prjs.append({"name": "psutil",
              "alias": "psutil-py",
              "type": "install",
-             "install": {"psutil": excons.Glob("psutil/*.py")}
+             "install": {"psutil": excons.glob("psutil/*.py")}
              })
-outputs += map(lambda x: "{outdir}/{path}".format(outdir=out_dir, path=x.get_path()), excons.Glob("psutil/*.py"))
+outputs += map(lambda x: "{outdir}/{path}".format(outdir=out_dir, path=x), excons.glob("psutil/*.py"))
 
 def PsutilOutputs():
     return outputs
