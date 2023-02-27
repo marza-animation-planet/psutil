@@ -1,15 +1,28 @@
 import os
 import imp
 import glob
+import distutils.sysconfig
+import sys
 
 base_module_name = os.path.splitext(os.path.basename(__file__))[0]
-file_pattern = os.path.abspath(os.path.join(os.environ["PSUTIL_PLATFORM_PATH"], "*{mod}.so".format(mod=base_module_name)))
+base_module_ext = distutils.sysconfig.get_config_var("EXT_SUFFIX" if sys.version_info.major > 2 else "SO")
+file_pattern = os.path.abspath(os.path.join(os.environ["PSUTIL_PLATFORM_PATH"], "*{mod}{ext}".format(mod=base_module_name, ext=base_module_ext)))
 
 try:
     file_path = glob.glob(file_pattern)[0]
-    module_name = os.path.splitext(os.path.basename(file_path))[0]
+    module_name = os.path.basename(file_path).split(base_module_ext)[0]
 except:
     raise ImportError("Couldn't find psutil platform module in '%s'" % os.environ["PSUTIL_PLATFORM_PATH"])
 
-mod = imp.load_dynamic(module_name, file_path)
-locals().update(mod.__dict__)
+if sys.version_info.major > 2:
+    import importlib.machinery
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    mod = importlib.util.module_from_spec(spec)
+    locals().update(mod.__dict__)
+
+else:
+    import imp
+    mod = imp.load_dynamic(module_name, file_path)
+    locals().update(mod.__dict__)

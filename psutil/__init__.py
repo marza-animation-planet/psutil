@@ -35,7 +35,7 @@ import time
 from distutils import sysconfig
 
 
-if not os.environ.has_key("PSUTIL_PLATFORM_PATH"):
+if "PSUTIL_PLATFORM_PATH" not in os.environ:
     os.environ["PSUTIL_PLATFORM_PATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), sysconfig.get_python_version(), sys.platform))
 
 try:
