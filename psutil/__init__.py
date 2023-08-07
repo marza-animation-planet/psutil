@@ -32,7 +32,7 @@ import subprocess
 import sys
 import threading
 import time
-from distutils import sysconfig
+import sysconfig
 
 
 if "PSUTIL_PLATFORM_PATH" not in os.environ:

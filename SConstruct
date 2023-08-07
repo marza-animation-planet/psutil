@@ -2,7 +2,7 @@ import excons
 import os
 import sys
 from excons.tools import python
-from distutils import sysconfig
+import sysconfig
 import struct
 
 

@@ -1,11 +1,16 @@
 import os
 import imp
 import glob
-import distutils.sysconfig
+import sysconfig
 import sys
 
 base_module_name = os.path.splitext(os.path.basename(__file__))[0]
-base_module_ext = distutils.sysconfig.get_config_var("EXT_SUFFIX" if sys.version_info.major > 2 else "SO")
+
+base_module_ext = sysconfig.get_config_var("EXT_SUFFIX")
+if sysconfig.get_python_version() <= "2.7":
+    import distutils.sysconfig
+    base_module_ext = distutils.sysconfig.get_config_var("SO")
+
 file_pattern = os.path.abspath(os.path.join(os.environ["PSUTIL_PLATFORM_PATH"], "*{mod}{ext}".format(mod=base_module_name, ext=base_module_ext)))
 
 try:
